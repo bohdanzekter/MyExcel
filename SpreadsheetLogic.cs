@@ -1,5 +1,6 @@
 ﻿// SpreadsheetLogic.cs
 //using AndroidX.Annotations;
+//using Android.Credentials;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
@@ -107,7 +108,7 @@ namespace MyExcelMauiLab1
         public List<string> GetSavedFiles()
         {
             string projectPath = FileSystem.AppDataDirectory;
-                string folderPath = Path.Combine(projectPath, "Tables");
+            string folderPath = Path.Combine(projectPath, "Tables");
 
             if (Directory.Exists(folderPath))
             {
@@ -207,7 +208,7 @@ namespace MyExcelMauiLab1
             {
                 throw new IndexOutOfRangeException($"Посилання на комірку '{name}' виходить за межі таблиці.");
             }
-        }   
+        }
 
         public string GetColumnName(int colIndex)
         {
@@ -222,13 +223,13 @@ namespace MyExcelMauiLab1
             return columnName;
         }
 
-
         public void ProcessCellUpdate(int row, int col, string content)
         {
             var cell = _cellData[row][col];
-            int.TryParse(content, out int number);
-            if (content == cell.Expression || number == cell.Value || content == cell.ErrorMessage) 
-            { 
+            int.TryParse(content, out int val);
+            if (CurrentDisplayMode == DisplayMode.Expression && cell.Expression == content
+                || CurrentDisplayMode == DisplayMode.Value && cell.Value == val)
+            {
                 return;
             }
             cell.Expression = content;
@@ -278,14 +279,17 @@ namespace MyExcelMauiLab1
                 }
             }
 
-            for (int r = 0; r < RowCount; r++)
+            int maxPasses = Math.Max(RowCount, ColumnCount) + 1;
+            for (int pass = 0; pass < maxPasses; pass++)
             {
-                for (int c = 0; c < ColumnCount; c++)
+                for (int r = 0; r < RowCount; r++)
                 {
-                    var cell = _cellData[r][c];
-                    if (string.IsNullOrEmpty(cell.ErrorMessage))
+                    for (int c = 0; c < ColumnCount; c++)
                     {
-                        CalculateCell(cell);
+                        if (string.IsNullOrEmpty(_cellData[r][c].ErrorMessage))
+                        {
+                            CalculateCell(_cellData[r][c]);
+                        }
                     }
                 }
             }
@@ -346,7 +350,6 @@ namespace MyExcelMauiLab1
             }
         }
 
-
         public bool GetCoordinates(string cellName, out int row, out int col)
         {
             row = -1; col = -1;
@@ -382,7 +385,6 @@ namespace MyExcelMauiLab1
             return false;
         }
 
-
         public void ToggleDisplayMode()
         {
             CurrentDisplayMode = (CurrentDisplayMode == DisplayMode.Value)
@@ -404,8 +406,8 @@ namespace MyExcelMauiLab1
                 }
                 else if (CurrentDisplayMode == DisplayMode.Value)
                 {
-                    return cell.Value.HasValue 
-                        ? cell.Value.Value.ToString() 
+                    return cell.Value.HasValue
+                        ? cell.Value.Value.ToString()
                         : string.Empty;
                 }
                 else
@@ -416,12 +418,23 @@ namespace MyExcelMauiLab1
             return string.Empty;
         }
 
-        public string GetCellExpressionMessage(int row, int col)
+        public string GetCellExpression(int row, int col)
         {
             if (row >= 0 && row < RowCount
                 && col >= 0 && col < ColumnCount)
             {
                 return _cellData[row][col].Expression;
+            }
+            return string.Empty;
+        }
+
+        public string? GetCellValue(int row, int col)
+        {
+            if (row >= 0 && row < RowCount
+                && col >= 0 && col < ColumnCount
+                && _cellData[row][col].Value != null)
+            {
+                return _cellData[row][col].Value.ToString();
             }
             return string.Empty;
         }

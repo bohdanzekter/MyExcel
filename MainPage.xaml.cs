@@ -291,17 +291,6 @@ namespace MyExcelMauiLab1
                     if (row >= 0 && col >= 0)
                     {
                         entry.Text = _logic.GetCellDisplayString(row, col);
-                        
-                        // Set tooltip only if there's an error
-                        string errorMessage = _logic.GetCellExpressionMessage(row, col);
-                        if (!string.IsNullOrWhiteSpace(errorMessage))
-                        {
-                            ToolTipProperties.SetText(entry, errorMessage);
-                        }
-                        else
-                        {
-                            ToolTipProperties.SetText(entry, "");
-                        }
                     }
                 }
             }
