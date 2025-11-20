@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyExcelMauiLab1.MainPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <VerticalStackLayout Spacing="5">
+
+            <StackLayout Orientation="Horizontal">
+                <Button 
+                    Text="Зберегти"
+                    Clicked="SaveButton_Clicked" 
+                    Margin="60,0,0,0"/>
+                <Button 
+                    Text="Завантажити"
+                    Clicked="LoadButton_Clicked" 
+                    Margin="95,0,0,0"/>
+                <Button 
+                    Text="Довідка"
+                    Clicked="HelpButton_Clicked"
+                    Margin="75,0,0,0"/>
+                <Button 
+                    Text="Вийти" 
+                    Clicked="ExitButton_Clicked"
+                    Margin="125,0,0,0"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Button 
+                    Text="Додати рядок" 
+                    Clicked="AddRowButton_Clicked"
+                    Margin="60,0,0,0"/>
+                <Button 
+                    Text="Видалити рядок" 
+                    Clicked="DeleteRowButton_Clicked"
+                    Margin="60,0,0,0"/>
+                <Button 
+                    Text="Додати стовпець" 
+                    Clicked="AddColumnButton_Clicked"
+                    Margin="60,0,0,0"/>
+                <Button 
+                    Text= "Видалити стовпець" 
+                    Clicked="DeleteColumnButton_Clicked"
+                    Margin="60,0,0,0"/>
+                <Button 
+                    Text= "Змінити вигляд" 
+                    Clicked="ToggleViewButton_Clicked"
+                    Margin="60,0,0,0"/>
+
+            </StackLayout>
+        </VerticalStackLayout>
+        <ScrollView Grid.Row="2" Grid.ColumnSpan="2" Orientation="Vertical">
+            <Grid x:Name="grid">
+            </Grid>
+        </ScrollView>
+    </Grid>
+</ContentPage>
