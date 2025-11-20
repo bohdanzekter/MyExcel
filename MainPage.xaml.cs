@@ -7,6 +7,13 @@ namespace MyExcelMauiLab1
 {
     public partial class MainPage : ContentPage
     {
+        enum ToolTipDisplayMode
+        {
+            Value,
+            Expression
+        }
+
+        ToolTipDisplayMode toolTipDisplayMode = ToolTipDisplayMode.Expression;
         private readonly SpreadsheetLogic _logic;
 
         private const int LETTERS_IN_ENG = 26;
@@ -260,9 +267,13 @@ namespace MyExcelMauiLab1
                 RefreshAllCellsUI();
             }
         }
+
         private void ToggleViewButton_Clicked(object sender, EventArgs e)
         {
+            toolTipDisplayMode = toolTipDisplayMode == ToolTipDisplayMode.Value 
+                ? ToolTipDisplayMode.Expression : ToolTipDisplayMode.Value;
             _logic.ToggleDisplayMode();
+            
         }
 
         private void Entry_Unfocused(object? sender, FocusEventArgs e)
@@ -291,6 +302,16 @@ namespace MyExcelMauiLab1
                     if (row >= 0 && col >= 0)
                     {
                         entry.Text = _logic.GetCellDisplayString(row, col);
+                        string expression = _logic.GetCellExpression(row, col);
+                        var val = _logic.GetCellValue(row, col);
+                        if (toolTipDisplayMode == ToolTipDisplayMode.Value)
+                        {
+                            ToolTipProperties.SetText(entry, val);
+                        }
+                        else
+                        {
+                            ToolTipProperties.SetText(entry, expression);
+                        }
                     }
                 }
             }

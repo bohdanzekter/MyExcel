@@ -428,7 +428,7 @@ namespace MyExcelMauiLab1
             return string.Empty;
         }
 
-        public string? GetCellValue(int row, int col)
+        public string GetCellValue(int row, int col)
         {
             if (row >= 0 && row < RowCount
                 && col >= 0 && col < ColumnCount
